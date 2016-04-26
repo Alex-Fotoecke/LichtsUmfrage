@@ -30,15 +30,15 @@
            
             $(function(){
                 $("#send").click(function() {
-                    Client.sendEvent('frage', $("#form").serializeObject());
+                    Client.sendEvent('feedbackApp', $("#form").serializeObject());
                 });
 
-                $("#neueantwort").click(function(event) {
-                    $("#antworten").append('<p><input type="text" name="antwort" value="" /><button>X</button></p>');
+                $("#neuesfeedback").click(function(event) {
+                    $("#feedbackApp").append('<p><input type="text" name="antwort" feedback="" /><button>X</button></p>');
                     event.preventDefault();
                 });
 
-                $("#antworten").on('click', 'button', function() {
+                $("#feedbackApp").on('click', 'button', function() {
                     $(this).parent().remove();
                 });
             });
@@ -46,24 +46,17 @@
     </head>
     <body>
         <form id="form">
-            <p>Stelle hier deine Frage</p><br/>
-            <input autofocus type="text" name="question" value="" /><br/>
-            <div id="antworten">
-                <p><input type="text" name="antwort" value="" /><button>X</button></p>
+            <p>Schreibe hier bitte dein Feedback</p><br/>
+            <p>Feedback Titel</p><input autofocus type="textarea" name="feedback" value="" /><br/>
+            <div id="feedbackApp">
+            <p>Text</p>
+                <p><textarea></textarea><button>X</button></p>
             </div>
-            <p><button id="neueantwort">Neue Antwort</button></p>
-            <p><input type="checkbox" name="public" value="public" checked> Ergebnis öffentlich zeigen</p>
-            <p><select name="time">
-                <option value="3">3 Sekunden</option> <!-- fürs debugging -->
-                <option value="10">10 Sekunden</option>
-                <option value="15">15 Sekunden</option>
-                <option value="30">30 Sekunden</option>
-                <option value="60">60 Sekunden</option>
-            </select></p>
+            <p><input type="checkbox" name="antwort" value="keineantwort" checked>Antwort erwünscht</p>
             <p><input type="button" id="send" value="absenden"/></p>
         </form>
         <footer>
-            <button onClick="Client.executeSlashCommand('/changelogapp');">/changelogapp</button> | <button onClick="Client.executeSlashCommand('/feedbackApp');">/feedbackApp</button> | <button onClick="Client.executeSlashCommand('/impressum');">/impressum</button>
+            <button onClick="Client.executeSlashCommand('/changelogapp');">/changelogapp</button> | <button onClick="Client.executeSlashCommand('/impressum');">/impressum</button>
         </footer>
     </body>
 </html>
