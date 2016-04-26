@@ -2,9 +2,10 @@
 
 var botUser 					= KnuddelsServer.getDefaultBotUser();
 var channelname					= KnuddelsServer.getChannel().getChannelName();
-var james						= KnuddelsServer.getFullImagePath('jamesdance.gif');
+var james						= KnuddelsServer.getFullImagePath('sm_abo-wlcm2012_jamesdance.gif');
 var nono						= KnuddelsServer.getFullImagePath('nono.gif');
 var cmehren						= KnuddelsServer.getFullImagePath('sm_ehren_01.gif');
+var logo						= KnuddelsServer.getFullImagePath('logo_neu.png');
 var ownInstance 				= KnuddelsServer.getAppAccess().getOwnInstance();
 var Moderators 					= KnuddelsServer.getChannel().getChannelConfiguration().getChannelRights().getChannelModerators();
 var appInfo 					= ownInstance.getAppInfo();
@@ -106,24 +107,24 @@ var App = (new function(){
 	};
 
 	this.onUserJoined = function(user) {
-		user.sendPrivateMessage('°Dies ist die Umfrage "Test-App" von Alex');
+		user.sendPrivateMessage('°#°°>CENTER<°°>' + logo + '<°°#°°>LEFT<°');
 		botUser.sendPublicActionMessage('fordert ' + user + ' auf, setz dich doch zu uns');
+		user.sendPrivateMessage('°#°°>CENTER<°°>{button}Umfrage Starten||call|/umfrage<°|°>{button}History (nur MCM)||call|/history<°°#°°>LEFT<°')
 		if(user.isChannelModerator()===true) {
-			//botUser.sendPublicActionMessage('öffnet °BB°_'+ user +'_°r° die Tür, und biete °BB°_'+ user +'_°r° den besten Platz im Channel an,°#°°#°....für die besten °BB°_MCM_°r° _nur_ das beste');//
 			user.sendPrivateMessage('Hallo ' + user + ', da du  °BB°_MCM_°r°  im Channel °RR°_ ' + channelname + ' _°r° bist kannst du mit _°BB>/changelogapp|/changelogapp<°°°_ dir die Aktuellen änderungen und Versionen der App anschauen°#°°#°Aktuelle App Version '+ appVersion+ ' oder du gibst _°BB>mcmBefehle|/mcmBefehle<°°°_ ein und bekommst alle Befehle aus dem Channel hier ausgegeben');
 			return;
 		}
 		else if (user.getUserStatus().isAtLeast(UserStatus.SystemBot)) {
-			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist°>'+ james +'<°°#°Du bist SystemBot');
+			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist °>'+ james +'<° °#°Du bist SystemBot');
 		}
 		else if (user.getUserStatus().isAtLeast(UserStatus.Sysadmin)) {
-			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist°>'+ james +'<°°#°Du bist SysAdmin');
+			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist °>'+ james +'<° °#°Du bist SysAdmin');
 		}
 		else if (user.getUserStatus().isAtLeast(UserStatus.Admin)) {
-			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist°>'+ james +'<°°#°Du bist Admin');
+			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist °>'+ james +'<° °#°Du bist Admin');
 		}
 		else if (user.getUserStatus().isAtLeast(UserStatus.HonoryMember)) {
-			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist°>'+ james +'<°°#°Du bist Ehrenmitglied');
+			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist °>'+ james +'<° °#°Du bist Ehrenmitglied');
 		}
 		else if (user.getUserStatus().isAtLeast(UserStatus.Stammi)) {
 			botUser.sendPublicActionMessage('°BB°_Stammi_°r° '+ user +' setz dich');		
