@@ -1,0 +1,26 @@
+Lieber Alex :) 
+vielleicht schaust erst mal, wie deine App so ankommt und das sie fehlerfrei läuft, 
+wie viele Leute sich so im Schnitt im Channel aufhalten und die App überhaupt benutzen. Der Channel Koblenz hat mit ach und 
+krach mal 6 CMs, sonst sind es immer nur 2-3 und wirklich viel zu tun haben wir hier auch nicht. 
+Deswegen, überstürz nicht direkt alles xD
+
+Folgender Fehler ist mir aufgefallen: Wenn man eine Umfrage startet länger als 60 Sekunden ist diese aktiv, bis der Timer 
+abgelaufen ist. D.h. Stelle ich wie gerade am laufen eine Umfrage ein die 1 Tag läuft, ist es niemandem möglich eine neue 
+Umfrage zu starten. Desweiteren haben die Chatten keine Möglichkeit zu der aktuellen Umfrage abzustimmen. Also wünschenswert 
+wäre per längeren Umfragen, das man mehrere paralele Umfragen hat und diese beim betreten den Channels auch beantworten kann, 
+das system sich aber merkt Xinet hat bereits Umfrage 1 + 2 beantwortet oder man nimmt die langen Timer wieder raus. Den Sinn 
+davon hab ich ehrlich gesagt noch nicht ganz verstanden. Eine Umfrage, die 1 Monat aktiv ist *hust* xDD Damit bekommst keine 
+User in den Channel :) 
+
+Idee: Ein Belohnungssystem dahinter. Xinet hat X Umfragen gestellt, xx Antworten kassiert, ein Levelsystem quasi. ggf. 
+Belohnungen? Ka.. Müsste ich noch weiter drüber nachdenken. 
+
+Wenn ich den AppBot per PM anquatsche und den Channel betrete schreibt er mir alles in mein kleines PM Fenster, 
+keine ahung, ob man das irgendwie unterbinden kann :) 
+
+Desweiteren ist der Umfrage Button zwar schön, aber er müsste irgendwo Fix sein. Wenn ich 1-2 Umfragen gestartet 
+habe muss ich ewig weit hoch scrollen um eine neue Umfrage zu starten. Da fand ich das Umfragefenster, das offen bleibt 
+besser, so kann man mehrere Umfragen machen ohne scrollen zu müssen. Schön wäre es nur, wenn nach dem erstellen der 
+Umfrage die Felder resetet würden. 
+
+Wenn du Rückfragen hast schreib mich an :PPP
