@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+ 
+<html>
+    <head>
+        <title>LichtsUmfrage Feedback</title>
+        <meta charset="utf-8" />       
+        <script src="/apps/api/knuddels-api.js"></script>
+        <script>
+            Client.includeCSS('style.css');
+            Client.includeJS('/apps/api/jquery.min.js');
+            Client.includeJS('mcm.js');
+        </script>
+        <script type="text/javascript">
+            $.fn.serializeObject = function()
+            {
+                var o = {};
+                var a = this.serializeArray();
+                $.each(a, function() {
+                    if (o[this.name] !== undefined) {
+                        if (!o[this.name].push) {
+                            o[this.name] = [o[this.name]];
+                        }
+                        o[this.name].push(this.value || '');
+                    } else {
+                        o[this.name] = this.value || '';
+                    }
+                });
+                return o;
+            };
+           
+            $(function(){
+                $("#send").click(function() {
+                    Client.sendEvent('feedbackApp', $("#form").serializeObject());
+                });
+
+                $("#neuesfeedback").click(function(event) {
+                    $("#feedbackApp").append('<p><input type="text" name="antwort" feedback="" /><button>X</button></p>');
+                    event.preventDefault();
+                });
+
+                $("#feedbackApp").on('click', 'button', function() {
+                    $(this).parent().remove();
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <form id="form">
+            <p>Schreibe hier bitte dein Feedback</p><br/>
+            <p>Feedback Titel</p><input autofocus type="textarea" name="feedback" value="" /><br/>
+            <div id="feedbackApp">
+            <p>Text</p>
+                <p><textarea></textarea><button>X</button></p>
+            </div>
+            <p><input type="checkbox" name="antwort" value="keineantwort" checked>Antwort erwünscht</p>
+            <p><input type="button" id="send" value="absenden"/></p>
+        </form>
+        <footer>
+            <button onClick="Client.executeSlashCommand('/changelogapp');">/changelogapp</button> | <button onClick="Client.executeSlashCommand('/impressum');">/impressum</button>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+ 
+<html>
+    <head>
+        <title>LichtsUmfrage</title>
+        <meta charset="utf-8" />       
+        <script src="/apps/api/knuddels-api.js"></script>
+        <script>
+            Client.includeCSS('style.css');
+            Client.includeJS('/apps/api/jquery.min.js');
+        </script>
+        <script type="text/javascript">
+            $.fn.serializeObject = function()
+            {
+                var o = {};
+                var a = this.serializeArray();
+                $.each(a, function() {
+                    if (o[this.name] !== undefined) {
+                        if (!o[this.name].push) {
+                            o[this.name] = [o[this.name]];
+                        }
+                        o[this.name].push(this.value || '');
+                    } else {
+                        o[this.name] = this.value || '';
+                    }
+                });
+                return o;
+            };
+           
+            $(function(){
+                $("#send").click(function() {
+                    Client.sendEvent('frage', $("#form").serializeObject());
+                });
+
+                $("#neueantwort").click(function(event) {
+                    $("#antworten").append('<p><input type="text" name="antwort" value="" /><button>X</button></p>');
+                    event.preventDefault();
+                });
+
+                $("#antworten").on('click', 'button', function() {
+                    $(this).parent().remove();
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <form id="form">
+            <p>Stelle hier deine Frage</p><br/>
+            <input autofocus type="text" name="question" value="" /><br/>
+            <div id="antworten">
+                <p><input type="text" name="antwort" value="" /><button>X</button></p>
+            </div>
+            <p><button id="neueantwort">Neue Antwort</button></p>
+            <p><input type="checkbox" name="public" value="public" checked> Ergebnis öffentlich zeigen</p>
+            <p><select name="time">
+                <option value="3">3 Sekunden</option> <!-- fürs debugging -->
+                <option value="10">10 Sekunden</option>
+                <option value="15">15 Sekunden</option>
+                <option value="30">30 Sekunden</option>
+                <option value="60">60 Sekunden</option>
+                <option value="3600">60 Minuten</option>
+                <option value="86400">1 Tag</option>
+                <option value="604800">1 Woche</option>
+                <option value="1209600">2 Wochen</option>
+                <option value="2419200">1 Monat</option>
+            </select></p>
+            <p><input type="button" id="send" value="absenden"/></p>
+        </form>
+        <footer>
+            <button onClick="Client.executeSlashCommand('/changelogapp');">/changelogapp</button> | <button onClick="Client.sendEvent('feedbackUser')">/feedbackUser</button> | <button onClick="Client.executeSlashCommand('/impressum');">/impressum</button>
+        </footer>
+    </body>
+</html>

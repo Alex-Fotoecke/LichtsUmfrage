@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+
+		
+		<script src="/apps/api/knuddels-api.js"></script>
+
+		<script>
+			Client.includeCSS('style.css');
+			Client.includeJS('/apps/api/jquery.min.js');	
+		</script>
+	</head>
+	<body>
+	<header><h1>Umfrage starten/History einsehen</h1></header><br/>
+		<article>
+			<p>Aktuelle App Version <b>1.0</b><hr>
+			<center><p style="color:red;font-size:15px;">!!!Hinweis!!!<br/>beachtet bitte das (NOCH) <b>ALLE</b> Befehle im Chat bestätig werden müssen</p></center><hr><br/>
+			<h1>Umfrage Starten</h1><br/>
+			<button onClick="Client.executeSlashCommand('/umfrage');">/Umfrage</button><br/>
+			<br/><hr>
+			<p><h1>feedbackApp TEXT</h1><br/>
+			<button onClick="Client.sendEvent('feedbackUser');">/feedbackApp</button><br/>
+			<br/><hr>
+			<p><h1>Changelogapp</h1><br/>
+			<button onClick="Client.executeSlashCommand('/changelogapp');">/changelogapp</button><br/>
+			<br/><hr>
+			<p><h1>History Aufrufen</h1><br/>
+			<button onClick="Client.executeSlashCommand('/history');">/history</button><br/>
+			<br/><hr>
+		</article>
+		<footer>
+			<h1>© Alexander Langer (LichtIstHoffnung)</h1>
+		</footer>
+	</body>
+</html>    

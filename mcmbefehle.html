@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+
+		
+		<script src="/apps/api/knuddels-api.js"></script>
+
+		<script>
+			Client.includeCSS('style.css');
+			Client.includeJS('/apps/api/jquery.min.js');
+			Client.includeJS('mcm.js');
+			
+		</script>
+	</head>
+	<body>
+			<header><h1>Alle Befehle in der App</h1></header><br/>
+		<article>
+			<p>Aktuelle App Version <b>1.0</b><hr>
+			<center><p style="color:red;font-size:15px;">!!!Hinweis!!!<br/>beachtet bitte das <b>ALLE</b> Befehle im Chat bestätig werden müssen</p></center><hr><br/>
+			<h1>MCMMail</h1><br/>
+			<button onClick="Client.executeSlashCommand('/mcmmail');">/mcmmail</button> (Dieser Befehl erlaubt es <b>nur</b> MCM, eine Mail an alle MCM zu senden)  ab <b>Version 1.0<b>.<br/>
+			<hr><b>Zu nutzen wie folgt</b><br/>
+			/mcmmail TEXT (Bitte nuzt für längerer Befehle den /editor von Knuddels)
+			<br/><hr>
+			<p><h1>feedbackApp TEXT</h1><br/>
+			<button onClick="Client.executeSlashCommand('/feedbackApp');">/feedbackApp</button> (Erlaubt es dem User wie auch MCM, Feedback, an den Entwickler zu senden) ab <b>Version 1.2</b>.<br/>
+			<hr><b>Zu nutzen wie folgt</b><br/>
+			/feedbackApp TEXT
+			<br/><hr>
+			<p><h1>Changelogapp</h1><br/>
+			<button onClick="Client.executeSlashCommand('/changelogapp');">/changelogapp</button> (Erlaubt es dem User wie auch MCM, Feedback, an den Entwickler zu senden) ab <b>Version 1.2</b>.<br/>
+			<hr><b>Zu nutzen wie folgt</b><br/>
+			/changelogapp (Achtung es geht ein PopUp auf)
+			<br/><hr>
+			<p><h1>U</h1><br/>
+			<button onClick="Client.executeSlashCommand('/u');">/u</button> (Erlaubt es MCM die App neuzustarten) ab <b>Version 1.3</b>.<br/>
+			<hr><b>Zu nutzen wie folgt</b><br/>
+			/u (Eventuell vllt kurz vorher Warnen das ihr den Befehl nutzt)
+			<br/><hr>
+			<p><h1>mcmBefehle</h1><br/>
+			<button onClick="Client.executeSlashCommand('/mcmBefehle');">/mcmBefehle</button> (Erlaubt es alle Befehle die es hier gibt einzusehen) ab <b>Version 1.3.1</b>.<br/>
+			<hr><b>Zu nutzen wie folgt</b><br/>
+			/mcmBefehle (Achtung es geht ein PopUp auf)
+			<br/><hr>
+			<p><h1>Impressum</h1><br/>
+			<button onClick="Client.executeSlashCommand('/impressum');">/impressum</button> (Öffnet das Impressum der App) ab <b>Version 1.4</b>.<br/>
+			<hr><b>Zu nutzen wie folgt</b><br/>
+			/impressum (Achtung es geht ein PopUp auf)
+			<br/><hr>
+		</article>
+		<footer>
+			<h1>© Alexander Langer (LichtIstHoffnung)</h1>
+		</footer>
+	</body>
+</html>    
