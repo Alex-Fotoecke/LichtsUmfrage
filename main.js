@@ -94,10 +94,10 @@ var App = (new function(){
 
     		}, time); //Kann man nun Auswählen (siehe HTML)
 		}
-
+		if (type === 'feedbackUser') {
+		botUser.sendPrivateMessage('Um Feedback zu senden klicke bitte hier "°>Linkname|/tf-overridesb /feedbackApp [TEXT]<°')
+	}
 	};
-
-
 	this.onPrepareShutdown = function(secondsTillShutdown){
 		botUser.sendPublicMessage('Die App fährt in ' + secondsTillShutdown + ' Sekunde herunter. Nach dem neustart ist sie sofort wieder nutzbar');
 	};
@@ -107,23 +107,26 @@ var App = (new function(){
 	};
 
 	this.onUserJoined = function(user) {
-		user.sendPrivateMessage('°#°°>CENTER<°°>' + logo + '<°°#°°>LEFT<°');
-		botUser.sendPublicActionMessage('fordert ' + user + ' auf, setz dich doch zu uns');
-		user.sendPrivateMessage('°#°°>CENTER<°°>{button}Umfrage Starten||call|/umfrage<°|°>{button}History (nur MCM)||call|/history<°°#°°>LEFT<°')
-		if(user.isChannelModerator()===true) {
-			user.sendPrivateMessage('Hallo ' + user + ', da du  °BB°_MCM_°r°  im Channel °RR°_ ' + channelname + ' _°r° bist kannst du mit _°BB>/changelogapp|/changelogapp<°°°_ dir die Aktuellen änderungen und Versionen der App anschauen°#°°#°Aktuelle App Version '+ appVersion+ ' oder du gibst _°BB>mcmBefehle|/mcmBefehle<°°°_ ein und bekommst alle Befehle aus dem Channel hier ausgegeben');
-			return;
-		}
-		else if (user.getUserStatus().isAtLeast(UserStatus.SystemBot)) {
-			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist °>'+ james +'<° °#°Du bist SystemBot');
-		}
-		else if (user.getUserStatus().isAtLeast(UserStatus.Sysadmin)) {
-			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist °>'+ james +'<° °#°Du bist SysAdmin');
-		}
-		else if (user.getUserStatus().isAtLeast(UserStatus.Admin)) {
-			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist °>'+ james +'<° °#°Du bist Admin');
-		}
-		else if (user.getUserStatus().isAtLeast(UserStatus.HonoryMember)) {
+	var htmlFile = new HTMLFile('buttons.html');
+	var overlayContent = AppContent.overlayContent(htmlFile, 300, 300);
+	user.sendAppContent(overlayContent);
+	user.sendPrivateMessage('°#°°>CENTER<°°>' + logo + '<°°#°°>LEFT<°');
+	botUser.sendPublicActionMessage('fordert ' + user + ' auf, setz dich doch zu uns');
+	user.sendPrivateMessage('°#°°>CENTER<°°>{button}Umfrage Starten||call|/umfrage<°|°>{button}History (nur MCM)||call|/history<°°#°°>LEFT<°')
+	if(user.isChannelModerator()===true) {
+		user.sendPrivateMessage('Hallo ' + user + ', da du  °BB°_MCM_°r°  im Channel °RR°_ ' + channelname + ' _°r° bist kannst du mit _°BB>/changelogapp|/changelogapp<°°°_ dir die Aktuellen änderungen und Versionen der App anschauen°#°°#°Aktuelle App Version '+ appVersion+ ' oder du gibst _°BB>mcmBefehle|/mcmBefehle<°°°_ ein und bekommst alle Befehle aus dem Channel hier ausgegeben');
+		return;
+	}
+	else if (user.getUserStatus().isAtLeast(UserStatus.SystemBot)) {
+		botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist °>'+ james +'<° °#°Du bist SystemBot');
+	}
+	else if (user.getUserStatus().isAtLeast(UserStatus.Sysadmin)) {
+		botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist °>'+ james +'<° °#°Du bist SysAdmin');
+	}
+	else if (user.getUserStatus().isAtLeast(UserStatus.Admin)) {
+		botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist °>'+ james +'<° °#°Du bist Admin');
+	}
+	else if (user.getUserStatus().isAtLeast(UserStatus.HonoryMember)) {
 			botUser.sendPublicMessage(user +' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist °>'+ james +'<° °#°Du bist Ehrenmitglied');
 		}
 		else if (user.getUserStatus().isAtLeast(UserStatus.Stammi)) {
