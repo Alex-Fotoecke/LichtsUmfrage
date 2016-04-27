@@ -95,7 +95,38 @@ var App = (new function(){
     		}, time); //Kann man nun Auswählen (siehe HTML)
 		}
 		if (type === 'feedbackUser') {
-		botUser.sendPrivateMessage('Um Feedback zu senden klicke bitte hier "°>Linkname|/tf-overridesb /feedbackApp [TEXT]<°')
+		user.sendPrivateMessage('Um Feedback zu senden klicke bitte hier "_°BB>Feedback schreiben|/tf-overridesb /feedbackApp [TEXT]<°°°_')
+	}
+	if (type === 'umfrage') {
+			var htmlFile = new HTMLFile('start.html');
+			var popupContent = AppContent.popupContent(htmlFile, 400,800);
+			user.sendAppContent (popupContent);
+	}
+	if (type === 'history') {
+		if(!user.isChannelModerator()) {
+		user.sendPrivateMessage('Du hast keine Berichtigung für diese Funktion.');
+		return;
+	}
+	else {
+	var countTo = 0;
+	if(params.length != 0 && !isNaN(parseFloat(params)) && isFinite(params)) {
+		countTo = vergangeneUmfragen.length - parseInt(params);
+		if(countTo < 0)
+			countTo = 0;
+	}
+	for(var i = vergangeneUmfragen.length - 1; i >= countTo; i--) {
+		var umfrage = vergangeneUmfragen[i];
+		if(typeof umfrage.createdAt != 'undefined')
+			var str = "Umfrage '" + umfrage.frage + "' von " + umfrage.ersteller.getProfileLink() + " erstellt am " + umfrage.createdAt + ": ";
+		else
+			var str = "Umfrage '" + umfrage.frage + "' von " + umfrage.ersteller.getProfileLink() + ": ";
+
+
+		for(var j = 0; j < umfrage.antworten.length; j++) {
+			str += "'" + umfrage.antworten[j] + "' (" + umfrage.votes[j] + "), ";
+		}
+		user.sendPrivateMessage(str);
+	}}
 	}
 	};
 	this.onPrepareShutdown = function(secondsTillShutdown){
@@ -108,7 +139,17 @@ var App = (new function(){
 
 	this.onUserJoined = function(user) {
 	var htmlFile = new HTMLFile('buttons.html');
+	var appContent = AppContent.overlayContent(htmlFile);
 	var overlayContent = AppContent.overlayContent(htmlFile, 300, 300);
+	if (user.canSendAppContent(appContent))
+	{
+    message = 'Du kannst die App benutzen. Viel Spaß!';
+	}
+	else
+	{
+    message = 'Du kannst diese App mit diesem Gerät leider nicht benutzen.';
+	}
+	user.sendPrivateMessage(message);
 	user.sendAppContent(overlayContent);
 	user.sendPrivateMessage('°#°°>CENTER<°°>' + logo + '<°°#°°>LEFT<°');
 	botUser.sendPublicActionMessage('fordert ' + user + ' auf, setz dich doch zu uns');
