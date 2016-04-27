@@ -11,22 +11,17 @@
 		</script>
 	</head>
 	<body>
-	<header><h1>Umfrage starten/History einsehen</h1></header><br/>
+	<header>Umfrage starten/History einsehen</header><br/>
 		<article>
-			<p>Aktuelle App Version <b>1.0</b><hr>
-			<center><p style="color:red;font-size:15px;">!!!Hinweis!!!<br/>beachtet bitte das (NOCH) <b>ALLE</b> Befehle im Chat bestätig werden müssen</p></center><hr><br/>
-			<h1>Umfrage Starten</h1><br/>
-			<button onClick="Client.executeSlashCommand('/umfrage');">/Umfrage</button><br/>
-			<br/><hr>
-			<p><h1>feedbackApp TEXT</h1><br/>
-			<button onClick="Client.sendEvent('feedbackUser');">/feedbackApp</button><br/>
-			<br/><hr>
-			<p><h1>Changelogapp</h1><br/>
-			<button onClick="Client.executeSlashCommand('/changelogapp');">/changelogapp</button><br/>
-			<br/><hr>
-			<p><h1>History Aufrufen</h1><br/>
+			<p>Umfrage Starten<br/>
+			<button onClick="Client.sendEvent('umfrage');">/Umfrage</button><br/>
+			<br/>
+			History Aufrufen<br/>
 			<button onClick="Client.executeSlashCommand('/history');">/history</button><br/>
-			<br/><hr>
+			<br/>
+			Feedback schreiben<br/>
+			<button onClick="Client.sendEvent('feedbackUser', '');">/feedbackApp</button><br/>
+			<br/></p>
 		</article>
 		<footer>
 			<h1>© Alexander Langer (LichtIstHoffnung)</h1>
