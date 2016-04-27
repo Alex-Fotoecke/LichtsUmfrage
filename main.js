@@ -140,7 +140,7 @@ var App = (new function(){
 	this.onUserJoined = function(user) {
 	var htmlFile = new HTMLFile('buttons.html');
 	var appContent = AppContent.overlayContent(htmlFile);
-	var overlayContent = AppContent.overlayContent(htmlFile, 300, 300);
+	var overlayContent = AppContent.overlayContent(htmlFile, 200, 250);
 	if (user.canSendAppContent(appContent))
 	{
     message = 'Du kannst die App benutzen. Viel Spaß!';
@@ -153,7 +153,6 @@ var App = (new function(){
 	user.sendAppContent(overlayContent);
 	user.sendPrivateMessage('°#°°>CENTER<°°>' + logo + '<°°#°°>LEFT<°');
 	botUser.sendPublicActionMessage('fordert ' + user + ' auf, setz dich doch zu uns');
-	user.sendPrivateMessage('°#°°>CENTER<°°>{button}Umfrage Starten||call|/umfrage<°|°>{button}History (nur MCM)||call|/history<°°#°°>LEFT<°')
 	if(user.isChannelModerator()===true) {
 		user.sendPrivateMessage('Hallo ' + user + ', da du  °BB°_MCM_°r°  im Channel °RR°_ ' + channelname + ' _°r° bist kannst du mit _°BB>/changelogapp|/changelogapp<°°°_ dir die Aktuellen änderungen und Versionen der App anschauen°#°°#°Aktuelle App Version '+ appVersion+ ' oder du gibst _°BB>mcmBefehle|/mcmBefehle<°°°_ ein und bekommst alle Befehle aus dem Channel hier ausgegeben');
 		return;
@@ -213,6 +212,6 @@ var App = (new function(){
 	this.onUserLeft = function(user) {
 		user.sendPrivateMessage('Schade das du gehst ' + user.getNick() + ', beehr uns bald wieder im Channel');
 		//user.sendPrivateMessage('Denk dran°#°°#°°BB°Nächstes Event am _18.02.2016_ um _19:00 Uhr_ Videostream des Europa Pokal Spiels°r°');//
-		botUser.sendPublicMessage(user +' hat den Channel verlassen');
+		botUser.sendPublicMessage(user.getProfileLink() +' hat den Channel verlassen');
 	};
 });	
