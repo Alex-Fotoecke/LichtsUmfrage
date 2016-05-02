@@ -11,19 +11,16 @@ var Moderators 					= KnuddelsServer.getChannel().getChannelConfiguration().getC
 var appInfo 					= ownInstance.getAppInfo();
 var appName 					= appInfo.getAppName();
 var appVersion 					= appInfo.getAppVersion();
-var vmcm 						= KnuddelsServer.getFullImagePath('vmcm.png');//icon VMCM// 
 
 var aktuelleUmfrage = null;
 
-var laufendeUmfrage = [];
-var vergangeneUmfragen = [];//langzeit Umfragen speichern//
-var vmcm = [];//3 Monate ablegen//
+var vergangeneUmfragen = [];
 
 function formatTime(time) {
-	return time.getDate() + "." + time.getMonth() + "." + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
+	return time.getDate() + "." + (time.getMonth()+1) + "." + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
 }
 
-var Umfrage = function(frage, antworten, ersteller, public, longlife) {
+var Umfrage = function(frage, antworten, ersteller, public) {
 	this.frage = frage;
 	this.antworten = antworten;
 	this.teilnehmer = {};
@@ -31,7 +28,6 @@ var Umfrage = function(frage, antworten, ersteller, public, longlife) {
 	this.ersteller = ersteller;
 	this.public = public;
 	this.createdAt = formatTime(new Date());
-	this.longlife = [];//langzeitumfragen ablegen??//
 
 	for(var i = 0; i < antworten.length; i++)
 		this.votes[i] = 0;
@@ -52,8 +48,6 @@ var App = (new function(){
 			instance.onUserJoined(users[index]);
 		}
 		vergangeneUmfragen = KnuddelsServer.getPersistence().getObject('umfragen', []);
-		laufendeUmfrage = KnuddelsServer.getPersistence().getObject('')//Was Kommt da rein, longlife umfragen//
-		vmcm = KnuddelsServer.getPersistence().getObject('')//Was kommt da rein, VMCM abfrage ?!?//
 	};
 
     this.onEventReceived = function(user, type, data, appContentSession) {
@@ -100,7 +94,6 @@ var App = (new function(){
 
     		}, time); //Kann man nun Auswählen (siehe HTML)
 		}
-		}
 		if (type === 'feedbackUser') {
 		user.sendPrivateMessage('Um Feedback zu senden klicke bitte hier "_°BB>Feedback schreiben|/tf-overridesb /feedbackApp [TEXT]<°°°_')
 	}
@@ -145,10 +138,6 @@ var App = (new function(){
 	};
 
 	this.onUserJoined = function(user) {
-		if(user.isVMCM()) {						/*VMCM Abfragen*/
-	user.addNicklistIcon(vmcm, 50);				/*Icon setzen*/
-	user.sendPrivateMessage('Herzlich Willkommen, °BB°_V_MCM°r° ' + user + ' schön das du da bist') //User noch mal als VMCM begrüßen, überprüfung!//
-}
 	var htmlFile = new HTMLFile('buttons.html');
 	var appContent = AppContent.overlayContent(htmlFile);
 	var overlayContent = AppContent.overlayContent(htmlFile, 200, 250);
@@ -222,6 +211,7 @@ var App = (new function(){
 	};
 	this.onUserLeft = function(user) {
 		user.sendPrivateMessage('Schade das du gehst ' + user.getNick() + ', beehr uns bald wieder im Channel');
+		//user.sendPrivateMessage('Denk dran°#°°#°°BB°Nächstes Event am _18.02.2016_ um _19:00 Uhr_ Videostream des Europa Pokal Spiels°r°');//
 		botUser.sendPublicMessage(user.getProfileLink() +' hat den Channel verlassen');
 	};
 });	

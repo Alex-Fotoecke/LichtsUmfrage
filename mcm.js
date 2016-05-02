@@ -70,7 +70,7 @@ function impressum (user, params, command) {
 };
 function umfrage (user, params, command) {
 	var htmlFile = new HTMLFile('start.html');
-	var popupContent = AppContent.popupContent(htmlFile, 50,50);
+	var popupContent = AppContent.popupContent(htmlFile, 200,150);
 	user.sendAppContent (popupContent);
 };
 
