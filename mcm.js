@@ -72,12 +72,6 @@ function impressum(user, params, command) {
 	user.sendPrivateMessage('Es wurde so eben das Impressum geöffnet');
 };
 
-function umfrage(user, params, command) {
-	var htmlFile = new HTMLFile('start.html');
-	var popupContent = AppContent.popupContent(htmlFile, 200, 150);
-	user.sendAppContent(popupContent);
-};
-
 function uvote(user, params, command) {
 	if (aktuelleUmfrage == null) { //Erstmal schauen ob überhaupt eine Umfrage läuft
 		user.sendPrivateMessage("Die Umfrage ist vorbei."); //Umfrage beendet User bekommt hinweis!
@@ -95,6 +89,55 @@ function uvote(user, params, command) {
 
 	user.sendPrivateMessage("Danke für deine Teilnahme bei meiner Umfrage. Du hast für '" + aktuelleUmfrage.antworten[params] + "' gestimmt.")
 };
+
+function lvote(user, params, command) {
+	var parts = params.split(" ");
+	var umfrage = null;
+	for (var i in langzeitUmfragen) {
+		if (langzeitUmfragen[i].id == parts[0]) {
+			umfrage = langzeitUmfragen[i];
+			break;
+		}
+	}
+
+	if (umfrage == null) {
+		user.sendPrivateMessage("Die Umfrage ist vorbei.");
+		return;
+	}
+
+	if (typeof umfrage.teilnehmer[user.getUserId()] != 'undefined') { //Dann ob der User bereits in der Teilnehmerliste ist
+		user.sendPrivateMessage("Du hast bereits abgestimmt.");
+		return;
+	}
+
+
+	umfrage.votes[parts[1]]++;
+	umfrage.teilnehmer[user.getUserId()] = true;
+
+	user.sendPrivateMessage("Danke für deine Teilnahme bei meiner Umfrage. Du hast für '" + umfrage.antworten[parts[1]] + "' gestimmt.")
+};
+
+function showUmfrage(user, umfrage) {
+
+	var message = '°BB°°20°_Channelumfrage_ °r°' + umfrage.ersteller.getNick() + '! ' + umfrage.frage + ' ?§°#°'
+
+	for (var i = 0; i < umfrage.antworten.length; i++) {
+		message += '°BB°°20°_Antwort Möglichkeit ' + (i + 1) + '_ °>{button}' + umfrage.antworten[i] + ' ||call|/lvote ' + umfrage.id + ' ' + i + '<°§°#°';
+	}
+
+	message += '°#°Die Langzeitumfrage läuft bis ' + formatTime(new Date(umfrage.ende));
+
+	user.sendPrivateMessage(message);
+}
+
+function lumfragen(user, params, command) {
+	for (var i in langzeitUmfragen) {
+		if (typeof langzeitUmfragen[i].teilnehmer[user.getUserId()] == 'undefined') { //Dann ob der User bereits in der Teilnehmerliste ist
+			showUmfrage(user, langzeitUmfragen[i]);
+		}
+	}
+};
+
 
 function history(user, params, command) {
 	if (!user.isChannelModerator()) {
