@@ -11,6 +11,7 @@ var Moderators 					= KnuddelsServer.getChannel().getChannelConfiguration().getC
 var appInfo 					= ownInstance.getAppInfo();
 var appName 					= appInfo.getAppName();
 var appVersion 					= appInfo.getAppVersion();
+var vmcm 						= KnuddelsServer.getFullImagePath('vmcm.png');//icon VMCM// 
 
 var aktuelleUmfrage = null;
 
@@ -207,11 +208,13 @@ var App = (new function(){
 		},
 		'history': function(user, params, command) {
 			history(user, params, command);
+		},
+		'vmcm' : function (user, params, command) {
+			vmcm(user,params,command)
 		}
 	};
 	this.onUserLeft = function(user) {
 		user.sendPrivateMessage('Schade das du gehst ' + user.getNick() + ', beehr uns bald wieder im Channel');
-		//user.sendPrivateMessage('Denk dran°#°°#°°BB°Nächstes Event am _18.02.2016_ um _19:00 Uhr_ Videostream des Europa Pokal Spiels°r°');//
 		botUser.sendPublicMessage(user.getProfileLink() +' hat den Channel verlassen');
 	};
 });	

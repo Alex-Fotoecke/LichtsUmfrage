@@ -117,4 +117,11 @@ function history(user, params, command) {
 		}
 		user.sendPrivateMessage(str);
 	}}
+function vmcm (user, params, command) {
+	var vcm = persistence.getObject("vcm", []);
+	var vcmuser = getUser(params);
+	vcm.push(vcmuser.getUserId()); // füge User Id der Liste hinzu, User kann xyz jetzt benutzen
+    persistence.saveObject("vcm", vcm); // speichere in Persistence
+	user.addNicklistIcon(vmcm, 50);
+}
 }
