@@ -18,6 +18,8 @@ var aktuelleUmfrage = null;
 
 var vergangeneUmfragen = [];
 
+var langzeitUmfragen = [];
+
 function formatTime(time) {
 	return time.getDate() + "." + (time.getMonth() + 1) + "." + time.getFullYear() + " " + time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds();
 }
@@ -35,9 +37,35 @@ var Umfrage = function(frage, antworten, ersteller, public) {
 		this.votes[i] = 0;
 };
 
+var LonglifeUmfrage = function(id, frage, antworten, ersteller, public, ende) {
+	this.id = id;
+	this.frage = frage;
+	this.antworten = antworten;
+	this.teilnehmer = {};
+	this.votes = [];
+	this.ersteller = ersteller;
+	this.public = public;
+	this.createdAt = formatTime(new Date());
+	this.ende = ende;
+
+	for (var i = 0; i < antworten.length; i++)
+		this.votes[i] = 0;
+};
+
 //erstmal eine Struktur die die ganzen Daten hält die wir brauchen, ich schreibe dich mit in das Impressum, hilfst mir ja
 
-
+function removeA(arr) {
+	var what, a = arguments,
+		L = a.length,
+		ax;
+	while (L > 1 && arr.length) {
+		what = a[--L];
+		while ((ax = arr.indexOf(what)) !== -1) {
+			arr.splice(ax, 1);
+		}
+	}
+	return arr;
+}
 
 require('mcm.js');
 
@@ -50,58 +78,131 @@ var App = (new function() {
 		}
 		vergangeneUmfragen = KnuddelsServer.getPersistence().getObject('umfragen', []);
 		vmcms = KnuddelsServer.getPersistence().getObject('vmcms', []);
+		langzeitUmfragen = KnuddelsServer.getPersistence().getObject('langzeitumfragen', []);
+
+		for (var i in langzeitUmfragen) {
+			var umfrage = langzeitUmfragen[i];
+
+			setTimeout(function() {
+				//So, 3 sekunden sind rum. Zählen wir doch mal
+				var str = "Die Umfrage '" + umfrage.frage + "' ist jetzt beendet. Hier die Anzahl der Stimmen:°#°";
+
+				for (var i = 0; i < umfrage.antworten.length; i++) {
+					str += "Antwortmöglichkeit '" + umfrage.antworten[i] + "' wurde " + umfrage.votes[i] + " mal gewählt°#°";
+				}
+				if (umfrage.public) {
+					botUser.sendPublicMessage(str);
+				}
+
+				umfrage.ersteller.sendPostMessage('Deine Umfrage', str);
+
+				vergangeneUmfragen.push(umfrage);
+
+				langzeitUmfragen = removeA(langzeitUmfragen, umfrage);
+
+			}, umfrage.ende - Date.now());
+		}
 	};
 
 	this.onEventReceived = function(user, type, data, appContentSession) {
 		if (type === 'frage') {
-			if (aktuelleUmfrage != null) {
-				user.sendPrivateMessage("Es läuft aktuell bereits eine Umfrage");
-				return;
-			}
 			appContentSession.remove();
+			if (data['time'] >= 3) {
+				var id = RandomOperations.nextInt(0, 9999999);
 
-			var frage = data['question'];
-			botUser.sendPublicMessage('°BB°°20°_Channelumfrage_ °r°' + user.getNick() + '! ' + frage + ' ?');
+				var frage = data['question'].escapeKCode();
+				botUser.sendPublicMessage('°BB°°20°_Channelumfrage_ °r°' + user.getNick() + '! ' + frage + ' ?');
 
-			var antworten = data['antwort'];
+				var antworten = data['antwort'];
 
-			if (typeof antworten == "string")
-				antworten = [antworten];
+				if (typeof antworten == "string")
+					antworten = [antworten];
 
-			for (var i = 0; i < antworten.length; i++) {
-				botUser.sendPublicMessage('°BB°°20°_Antwort Möglichkeit ' + (i + 1) + '_ °>{button}' + antworten[i] + ' ||call|/uvote ' + i + '<°');
+
+				for (var i = 0; i < antworten.length; i++) {
+					antworten[i] = antworten[i].escapeKCode();
+					botUser.sendPublicMessage('°BB°°20°_Antwort Möglichkeit ' + (i + 1) + '_ °>{button}' + antworten[i] + ' ||call|/lvote ' + id + ' ' + i + '<°');
+				}
+				var time = data['time'] * 1000;
+
+
+				var public = typeof data['public'] != 'undefined';
+				var umfrage = new LonglifeUmfrage(id, frage, antworten, user, public, Date.now() + time);
+
+				langzeitUmfragen.push(umfrage);
+				botUser.sendPublicMessage('Die Langzeitumfrage läuft bis ' + formatTime(new Date(umfrage.ende)));
+
+				setTimeout(function() {
+					//So, 3 sekunden sind rum. Zählen wir doch mal
+					var str = "Die Umfrage '" + umfrage.frage + "' ist jetzt beendet. Hier die Anzahl der Stimmen:°#°";
+
+					for (var i = 0; i < umfrage.antworten.length; i++) {
+						str += "Antwortmöglichkeit '" + umfrage.antworten[i] + "' wurde " + umfrage.votes[i] + " mal gewählt°#°";
+					}
+
+					if (umfrage.public) {
+						botUser.sendPublicMessage(str);
+					}
+
+					umfrage.ersteller.sendPostMessage('Deine Umfrage', str);
+
+
+					vergangeneUmfragen.push(umfrage);
+
+					langzeitUmfragen = removeA(langzeitUmfragen, umfrage);
+
+				}, time); //Kann man nun Auswählen (siehe HTML)
+			} else {
+				if (aktuelleUmfrage != null) {
+					user.sendPrivateMessage("Es läuft aktuell bereits eine Umfrage");
+					return;
+				}
+
+
+				var frage = data['question'].escapeKCode();
+				botUser.sendPublicMessage('°BB°°20°_Channelumfrage_ °r°' + user.getNick() + '! ' + frage + ' ?');
+
+				var antworten = data['antwort'];
+
+				if (typeof antworten == "string")
+					antworten = [antworten];
+
+				for (var i = 0; i < antworten.length; i++) {
+					antworten[i] = antworten[i].escapeKCode();
+					botUser.sendPublicMessage('°BB°°20°_Antwort Möglichkeit ' + (i + 1) + '_ °>{button}' + antworten[i] + ' ||call|/uvote ' + i + '<°');
+				}
+				var time = data['time'] * 1000; //mal tausend da JS usw. in millisekunden rechnet
+
+				// Jetzt noch verwenden
+				botUser.sendPublicMessage('Du hast noch °>{countdown}time=' + time + '<° um abzustimmen');
+				var public = typeof data['public'] != 'undefined';
+				aktuelleUmfrage = new Umfrage(frage, antworten, user, public);
+
+				setTimeout(function() {
+					//So, 3 sekunden sind rum. Zählen wir doch mal
+					var str = "Die Umfrage '" + aktuelleUmfrage.frage + "' ist jetzt beendet. Hier die Anzahl der Stimmen:°#°";
+
+					for (var i = 0; i < aktuelleUmfrage.antworten.length; i++) {
+						str += "Antwortmöglichkeit '" + aktuelleUmfrage.antworten[i] + "' wurde " + aktuelleUmfrage.votes[i] + " mal gewählt°#°";
+					}
+					if (aktuelleUmfrage.public) {
+						botUser.sendPublicMessage(str);
+					} else {
+						aktuelleUmfrage.ersteller.sendPrivateMessage(str);
+					}
+
+					vergangeneUmfragen.push(aktuelleUmfrage);
+					aktuelleUmfrage = null;
+
+				}, time); //Kann man nun Auswählen (siehe HTML)
 			}
-			var time = data['time'] * 1000; //mal tausend da JS usw. in millisekunden rechnet
-
-			// Jetzt noch verwenden
-			botUser.sendPublicMessage('Du hast noch °>{countdown}time=' + time + '<° um abzustimmen');
-			var public = typeof data['public'] != 'undefined';
-			aktuelleUmfrage = new Umfrage(frage, antworten, user, public);
-
-			setTimeout(function() {
-				//So, 3 sekunden sind rum. Zählen wir doch mal
-				var str = "Die Umfrage '" + aktuelleUmfrage.frage + "' ist jetzt beendet. Hier die Anzahl der Stimmen:°#°";
-
-				for (var i = 0; i < aktuelleUmfrage.antworten.length; i++) {
-					str += "Antwortmöglichkeit '" + aktuelleUmfrage.antworten[i] + "' wurde " + aktuelleUmfrage.votes[i] + " mal gewählt°#°";
-				}
-				if (aktuelleUmfrage.public) {
-					botUser.sendPublicMessage(str);
-				} else {
-					aktuelleUmfrage.ersteller.sendPrivateMessage(str);
-				}
-
-				vergangeneUmfragen.push(aktuelleUmfrage);
-				aktuelleUmfrage = null;
-
-			}, time); //Kann man nun Auswählen (siehe HTML)
 		}
 		if (type === 'feedbackUser') {
 			user.sendPrivateMessage('Um Feedback zu senden klicke bitte hier "_°BB>Feedback schreiben|/tf-overridesb /feedbackApp [TEXT]<°°°_')
 		}
 		if (type === 'umfrage') {
 			var htmlFile = new HTMLFile('start.html');
-			var popupContent = AppContent.popupContent(htmlFile, 400, 800);
+			var popupContent = AppContent.popupContent(htmlFile, 400, 600);
 			user.sendAppContent(popupContent);
 		}
 		if (type === 'history') {
@@ -138,19 +239,22 @@ var App = (new function() {
 	this.onShutdown = function() {
 		KnuddelsServer.getPersistence().setObject('umfragen', vergangeneUmfragen);
 		KnuddelsServer.getPersistence().setObject('vmcms', vmcms);
+		KnuddelsServer.getPersistence().setObject('langzeitumfragen', langzeitUmfragen);
 	};
 
 	this.onUserJoined = function(user) {
 		var htmlFile = new HTMLFile('buttons.html');
 		var appContent = AppContent.overlayContent(htmlFile);
 		var overlayContent = AppContent.overlayContent(htmlFile, 200, 250);
+
 		if (user.canSendAppContent(appContent)) {
-			message = 'Du kannst die App benutzen. Viel Spaß!';
+			user.sendPrivateMessage('Du kannst die App benutzen. Viel Spaß!');
+			user.sendAppContent(overlayContent);
 		} else {
-			message = 'Du kannst diese App mit diesem Gerät leider nicht benutzen.';
+			user.sendPrivateMessage('Du kannst diese App mit diesem Gerät leider nicht benutzen.');
 		}
-		user.sendPrivateMessage(message);
-		user.sendAppContent(overlayContent);
+
+
 		user.sendPrivateMessage('°#°°>CENTER<°°>' + logo + '<°°#°°>LEFT<°');
 		botUser.sendPublicActionMessage('fordert ' + user + ' auf, setz dich doch zu uns');
 		if (user.isChannelModerator() === true) {
@@ -171,14 +275,25 @@ var App = (new function() {
 			botUser.sendPublicMessage(user + ' Herzlich Willkommen im ' + channelname + ', wir freuen uns das du da bist°>' + james + '<°°#°Du bist Newbie');
 		}
 
-		if(vmcms.indexOf(user.getUserId()) != -1) {
+		if (vmcms.indexOf(user.getUserId()) != -1) {
 			user.addNicklistIcon(vmcm_icon, 35);
 		}
+
+
+		var offeneUmfrage = false;
+		for (var i in langzeitUmfragen) {
+			if (typeof langzeitUmfragen[i].teilnehmer[user.getUserId()] == 'undefined') { //Dann ob der User bereits in der Teilnehmerliste ist
+				offeneUmfrage = true;
+				break;
+			}
+		}
+
+		if (offeneUmfrage)
+			user.sendPrivateMessage("Es laufen °>{button}Umfragen||call|/lumfragen<° an denen du noch nicht abgestimmt hast.")
+
+
 	};
 	this.chatCommands = {
-		'umfrage': function(user, params, command) {
-			umfrage(user, params, command);
-		},
 		'mcmmail': function(user, params, command) {
 			mcmmail(user, params, command);
 		},
@@ -199,6 +314,12 @@ var App = (new function() {
 		},
 		'uvote': function(user, params, command) {
 			uvote(user, params, command);
+		},
+		'lvote': function(user, params, command) {
+			lvote(user, params, command);
+		},
+		'lumfragen': function(user, params, command) {
+			lumfragen(user, params, command);
 		},
 		'history': function(user, params, command) {
 			history(user, params, command);
