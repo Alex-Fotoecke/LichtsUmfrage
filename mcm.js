@@ -29,13 +29,13 @@ function feedbackApp(user, params) {
 	user.sendPrivateMessage('Dein Feedback wurde abgeschickt!');
 };
 
-function changelogapp(user, command, params) {
-	var htmlFile = new HTMLFile('changelog.html', pageData);
-	var pageData = htmlFile.getPageData();
-	var popupContent = AppContent.popupContent(htmlFile, 400, 800);
-	pageData = {}
-	pageData.version = appInfo.getAppVersion();
-	user.sendAppContent(popupContent);
+function changelogapp(user, command, params) { 
+    var pageData = {
+        version: appInfo.getAppVersion()
+    };
+    var htmlFile = new HTMLFile('changelog.html', pageData); 
+    var popupContent = AppContent.popupContent(htmlFile, 400, 800); 
+    user.sendAppContent(popupContent);
 };
 
 function u(user, params, command) {
