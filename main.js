@@ -97,7 +97,7 @@ if(umfrage.ende - Date.now() < 2147483647)
 					botUser.sendPublicMessage(str);
 				}
 
-				umfrage.ersteller.sendPostMessage('Deine Umfrage', str);
+				umfrage.ersteller.sendPostMessage('Deine Umfrage' + umfrage.id, str);
 
 				vergangeneUmfragen.push(umfrage);
 

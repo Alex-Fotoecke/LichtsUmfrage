@@ -131,7 +131,7 @@ function lumfragen(user, params, command) {
 
 function history(user, params, command) {
 	if (!user.isChannelModerator()) {
-		user.sendPrivateMessage('Du hast keine Berichtigung für diese Funktion.');
+		user.sendPrivateMessage('Du hast keine Berechtigung für diese Funktion.');
 		return;
 	} else {
 		var countTo = 0;
