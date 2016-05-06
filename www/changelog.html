@@ -6,7 +6,9 @@
 			Client.includeCSS('style.css');
 			Client.includeJS('/apps/api/jquery.min.js');
 			var version = Client.pageData['version'];
-			function onload { 
+		</script>
+		<script>
+			function onload() { 
 			$("span#versionPanel").text(Client.pageData["version"]);
 			};
 		</script>
