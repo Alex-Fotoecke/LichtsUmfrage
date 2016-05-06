@@ -49,18 +49,18 @@ article {
 	-webkit-hyphens: auto;
 }
 button{
-	font-size: 15px;
 	color:#fff;
 	border-radius: 15px;
 	background-color:#1384ed;
 	text-align: center;
+	cursor: pointer;
 }
 button:hover{
-	font-size: 20px;
 	color:#fff;
 	border-radius: 15px;
 	background-color:#1384ed;
 	text-align: center;
+	cursor: pointer;
 }
 footer {
 	border-radius: 15px;

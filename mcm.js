@@ -1,8 +1,8 @@
 /* global AppContent, KnuddelsServer, appInfo, botUser, Moderators, nono, cmehren */
 
-function mcmmail(user, params, command) {
+function mcmmail(user, params, command) { 
 	if (!user.isChannelModerator()) {
-		user.sendPrivateMessage('Du hast keine Berichtigung für diese Funktion.');
+		user.sendPrivateMessage('Du hast keine Berechtigung für diese Funktion.');
 		return;
 	}
 	if (params.length == 0) {
@@ -12,39 +12,29 @@ function mcmmail(user, params, command) {
 		var Moderators = KnuddelsServer.getChannel().getChannelConfiguration().getChannelRights().getChannelModerators();
 		for (var i = 0; i < Moderators.length; i++) {
 			var Moderator = Moderators[i];
-			Moderator.sendPostMessage('Channelmail von ' + user.getNick(), text);
+			var res = text.replace("$TONICK", Moderator.getProfileLink());
+			Moderator.sendPostMessage('Channelmail von ' + user.getNick(), res);
 		}
 		user.sendPrivateMessage('Rundmail wurde erfolgreich verschickt.');
 	}
 };
 
-function verwarnung(user, params, command) {
-	if (!user.isChannelModerator()) {
-		user.sendPrivateMessage('Du bist nicht berechtigt diesen Command zu nutzen');
-		return;
-	}
-	if (params.length === 0) {
-		user.sendPrivateMessage('Du musst schon was eingeben');
-	} else {
-		var text = '°BB°_' + user.getNick() + '_°r° hat °BB°_' + params.escapeKCode() + '_°r° im Channel °BB°_Humor P@rty_°r° Verwarnt';
-		botUser.sendPublicMessage('°BB°_' + user.getNick() + '_°r° hat °BB°_' + params + '_°r° verwarnt.°#°Bei wiederhandlung wird der °BB°_MCM_°r° dich des Channels verweisen');
-		for (var i = 0; i < Moderators.length; i++) {
-			var Moderator = Moderators[i];
-			Moderator.sendPostMessage('Verwarnung von ' + user.getNick(), text);
-		}
-	}
-
-};
-
 function feedbackApp(user, params) {
-	var text = 'Ein Feedback ist von ' + user.getNick() + ' eingetroffen °#° Inhalt des Feedbacks ist: °#° ' + params.escapeKCode();
-	appInfo.getAppDeveloper().sendPostMessage('Feedback von ' + user.getNick(), text);
+	var channelowners = KnuddelsServer.getChannel().getChannelConfiguration().getChannelRights().getChannelOwners();
+	for (var i = 0; i < channelowners.length; i++) {
+		var ChannelOwner = channelowners[i];
+		var text = 'Ein Feedback ist von ' + user.getNick() + ' eingetroffen °#° Inhalt des Feedbacks ist: °#°°#° ' + params.escapeKCode();
+		ChannelOwner.sendPostMessage('Feedback von ' + user.getNick(), text);
+	}
 	user.sendPrivateMessage('Dein Feedback wurde abgeschickt!');
 };
 
 function changelogapp(user, command, params) {
-	var htmlFile = new HTMLFile('changelog.html');
+	var htmlFile = new HTMLFile('changelog.html', pageData);
+	var pageData = htmlFile.getPageData();
 	var popupContent = AppContent.popupContent(htmlFile, 400, 800);
+	pageData = {}
+	pageData.version = appInfo.getAppVersion();
 	user.sendAppContent(popupContent);
 };
 
@@ -118,16 +108,16 @@ function lvote(user, params, command) {
 };
 
 function showUmfrage(user, umfrage) {
-
-	var message = '°BB°°20°_Channelumfrage_ °r°' + umfrage.ersteller.getNick() + '! ' + umfrage.frage + ' ?§°#°'
-
-	for (var i = 0; i < umfrage.antworten.length; i++) {
-		message += '°BB°°20°_Antwort Möglichkeit ' + (i + 1) + '_ °>{button}' + umfrage.antworten[i] + ' ||call|/lvote ' + umfrage.id + ' ' + i + '<°§°#°';
-	}
-
-	message += '°#°Die Langzeitumfrage läuft bis ' + formatTime(new Date(umfrage.ende));
-
-	user.sendPrivateMessage(message);
+ 
+    var message = '°#°°>CENTER<°°BB°°20°_Channelumfrage_ °r°' + umfrage.ersteller.getNick() + '! ' + umfrage.frage + ' ?°#°'
+ 
+    for (var i = 0; i < umfrage.antworten.length; i++) {
+        message += '°>{button}' + umfrage.antworten[i] + ' ||call|/lvote ' + umfrage.id + ' ' + i + '<° ';
+    }
+ 
+    message += '°#°°#°Die Langzeitumfrage läuft bis ' + formatTime(new Date(umfrage.ende)) + '°##°°>LEFT<°';
+ 
+    user.sendPrivateMessage(message);
 }
 
 function lumfragen(user, params, command) {
@@ -153,7 +143,7 @@ function history(user, params, command) {
 		for (var i = vergangeneUmfragen.length - 1; i >= countTo; i--) {
 			var umfrage = vergangeneUmfragen[i];
 			if (typeof umfrage.createdAt != 'undefined')
-				var str = "Umfrage '" + umfrage.frage + "' von " + umfrage.ersteller.getProfileLink() + " erstellt am " + umfrage.createdAt + ": ";
+				var str = "Die Umfrage '" + umfrage.id + ' - ' + umfrage.frage + "' von " + umfrage.ersteller.getProfileLink() + " erstellt am " + umfrage.createdAt + ": ";
 			else
 				var str = "Umfrage '" + umfrage.frage + "' von " + umfrage.ersteller.getProfileLink() + ": ";
 
@@ -168,6 +158,7 @@ function history(user, params, command) {
 }
 
 function vmcm(user, params, command) {
+	if (user.isChannelOwner()===true) {
 	var ua = KnuddelsServer.getUserAccess();
 	if (ua.exists(params)) {
 		var id = ua.getUserId(params);
@@ -182,4 +173,8 @@ function vmcm(user, params, command) {
 			}
 		}
 	}
+	user.sendPrivateMessage('VMCM wurde vergeben');
+}
+else
+ user.sendPrivateMessage ('Du bist nicht berechtigt, diese funktion ist für den Channelinhaber.°#°Erstelle doch einen eigene Channel -> °BB>MyChannel erstellen|/mychannel<°°° und nutze diesen Befehl dann!');
 }

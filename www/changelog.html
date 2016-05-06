@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<script src="/apps/api/knuddels-api.js"></script>
+
+		<script>
+			Client.includeCSS('style.css');
+			Client.includeJS('/apps/api/jquery.min.js');
+			var pageData = htmlFile.getPageData();
+			var version = Client.pageData['version']; 
+		</script>
+	</head>
+	<body>
+			<header><h1>Changelog Umfrage Tool</h1></header><br/>
+			<article>
+				<p>Aktuelle Version der App <b><script type="text/javascript">document.write('version')</script></b><hr>
+				<h1>Letzte Änderungen</h1><br/>
+				Einführung der mcmBefehle HTML UI, Impressum eingeführt<br/><hr>
+				<h1>Version 1.3.2</h1><br/>
+				Der Changelog wurde in ein Popup gelegt, er kann somit besser gestaltet werden und ist besser lesbar.<br/>
+				<br/><hr>
+				<h1>Version 1.3.1</h1><br/>
+				Einführung von /mcmBefehle (Welches erlaubt alle Befehle aus diesem Channel anzuzeigen inkl. Erklärung)<br/>
+				<br/><hr>
+				<h1>Version 1.3</h1>
+				Einführung von /u (damit kann man die App neustarten OHNE /apps eingeben zu müssen)<br/>
+				<br/><hr>
+				<h1>Version 1.2</h1>/feedbackApp eingeführt außerdem habe ich den Befehl /changelogapp eingebaut.</p><hr>
+				<p><h1>Alle Befehle der App</h1>
+				<center><button onClick="Client.executeSlashCommand('/mcmBefehle');">/mcmBefehle</button></center></p>
+			</article>
+			<footer><h1>© Alexander Langer (LichtIstHoffnung)</h1></footer>
+	</body>
+</html>

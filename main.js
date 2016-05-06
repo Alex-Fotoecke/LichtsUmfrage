@@ -32,6 +32,7 @@ var Umfrage = function(frage, antworten, ersteller, public) {
 	this.ersteller = ersteller;
 	this.public = public;
 	this.createdAt = formatTime(new Date());
+	/*this.status = status;*/
 
 	for (var i = 0; i < antworten.length; i++)
 		this.votes[i] = 0;
@@ -46,6 +47,7 @@ var LonglifeUmfrage = function(id, frage, antworten, ersteller, public, ende) {
 	this.ersteller = ersteller;
 	this.public = public;
 	this.createdAt = formatTime(new Date());
+	/*this.status = status;*/
 	this.ende = ende;
 
 	for (var i = 0; i < antworten.length; i++)
@@ -72,17 +74,18 @@ require('mcm.js');
 var App = (new function() {
 	var instance = this;
 	this.onAppStart = function() {
+		vergangeneUmfragen = KnuddelsServer.getPersistence().getObject('umfragen', []);
+		vmcms = KnuddelsServer.getPersistence().getObject('vmcms', []);
+		langzeitUmfragen = KnuddelsServer.getPersistence().getObject('langzeitumfragen', []);
+		
 		var users = KnuddelsServer.getChannel().getOnlineUsers();
 		for (var index in users) {
 			instance.onUserJoined(users[index]);
 		}
-		vergangeneUmfragen = KnuddelsServer.getPersistence().getObject('umfragen', []);
-		vmcms = KnuddelsServer.getPersistence().getObject('vmcms', []);
-		langzeitUmfragen = KnuddelsServer.getPersistence().getObject('langzeitumfragen', []);
 
 		for (var i in langzeitUmfragen) {
 			var umfrage = langzeitUmfragen[i];
-
+if(umfrage.ende - Date.now() < 2147483647)
 			setTimeout(function() {
 				//So, 3 sekunden sind rum. Zählen wir doch mal
 				var str = "Die Umfrage '" + umfrage.frage + "' ist jetzt beendet. Hier die Anzahl der Stimmen:°#°";
@@ -105,23 +108,25 @@ var App = (new function() {
 	};
 
 	this.onEventReceived = function(user, type, data, appContentSession) {
+		if (type == 'history') {
+			history(user,"","/history");
+		}
 		if (type === 'frage') {
 			appContentSession.remove();
-			if (data['time'] >= 3) {
+			if (data['time'] >= 3600) {
 				var id = RandomOperations.nextInt(0, 9999999);
 
 				var frage = data['question'].escapeKCode();
-				botUser.sendPublicMessage('°BB°°20°_Channelumfrage_ °r°' + user.getNick() + '! ' + frage + ' ?');
+				botUser.sendPublicMessage('°BB°°20°_Channelumfrage_ °r°_' + user.getProfileLink() + '_! ' + frage + ' ?');
 
 				var antworten = data['antwort'];
 
-				if (typeof antworten == "string")
+				if (typeof antworten == "string") {
 					antworten = [antworten];
-
-
+				}
 				for (var i = 0; i < antworten.length; i++) {
 					antworten[i] = antworten[i].escapeKCode();
-					botUser.sendPublicMessage('°BB°°20°_Antwort Möglichkeit ' + (i + 1) + '_ °>{button}' + antworten[i] + ' ||call|/lvote ' + id + ' ' + i + '<°');
+					botUser.sendPublicMessage('°#°°>CENTER<°°>{button}' + antworten[i] + ' ||call|/lvote ' + id + ' ' + i + '<°°#°°>LEFT<°');
 				}
 				var time = data['time'] * 1000;
 
@@ -160,7 +165,7 @@ var App = (new function() {
 
 
 				var frage = data['question'].escapeKCode();
-				botUser.sendPublicMessage('°BB°°20°_Channelumfrage_ °r°' + user.getNick() + '! ' + frage + ' ?');
+				var ausgabe = '°#°°>CENTER<°°BB°°20°_Channelumfrage_°r° von _' + user.getProfileLink() + '_!°##°' + frage + ' ?°##°';
 
 				var antworten = data['antwort'];
 
@@ -169,12 +174,11 @@ var App = (new function() {
 
 				for (var i = 0; i < antworten.length; i++) {
 					antworten[i] = antworten[i].escapeKCode();
-					botUser.sendPublicMessage('°BB°°20°_Antwort Möglichkeit ' + (i + 1) + '_ °>{button}' + antworten[i] + ' ||call|/uvote ' + i + '<°');
+					ausgabe += '°>{button}' + antworten[i] + ' ||call|/uvote ' + i + '<° ';
 				}
 				var time = data['time'] * 1000; //mal tausend da JS usw. in millisekunden rechnet
-
-				// Jetzt noch verwenden
-				botUser.sendPublicMessage('Du hast noch °>{countdown}time=' + time + '<° um abzustimmen');
+				ausgabe += "°##°°>{countdown}time=" + time + "|timeUpText=   <°°#°°>LEFT<°";
+				botUser.sendPublicMessage(ausgabe);
 				var public = typeof data['public'] != 'undefined';
 				aktuelleUmfrage = new Umfrage(frage, antworten, user, public);
 
@@ -204,32 +208,6 @@ var App = (new function() {
 			var htmlFile = new HTMLFile('start.html');
 			var popupContent = AppContent.popupContent(htmlFile, 400, 600);
 			user.sendAppContent(popupContent);
-		}
-		if (type === 'history') {
-			if (!user.isChannelModerator()) {
-				user.sendPrivateMessage('Du hast keine Berichtigung für diese Funktion.');
-				return;
-			} else {
-				var countTo = 0;
-				if (params.length != 0 && !isNaN(parseFloat(params)) && isFinite(params)) {
-					countTo = vergangeneUmfragen.length - parseInt(params);
-					if (countTo < 0)
-						countTo = 0;
-				}
-				for (var i = vergangeneUmfragen.length - 1; i >= countTo; i--) {
-					var umfrage = vergangeneUmfragen[i];
-					if (typeof umfrage.createdAt != 'undefined')
-						var str = "Umfrage '" + umfrage.frage + "' von " + umfrage.ersteller.getProfileLink() + " erstellt am " + umfrage.createdAt + ": ";
-					else
-						var str = "Umfrage '" + umfrage.frage + "' von " + umfrage.ersteller.getProfileLink() + ": ";
-
-
-					for (var j = 0; j < umfrage.antworten.length; j++) {
-						str += "'" + umfrage.antworten[j] + "' (" + umfrage.votes[j] + "), ";
-					}
-					user.sendPrivateMessage(str);
-				}
-			}
 		}
 	};
 	this.onPrepareShutdown = function(secondsTillShutdown) {
@@ -289,7 +267,7 @@ var App = (new function() {
 		}
 
 		if (offeneUmfrage)
-			user.sendPrivateMessage("Es laufen °>{button}Umfragen||call|/lumfragen<° an denen du noch nicht abgestimmt hast.")
+			user.sendPrivateMessage("Es laufen °>{button}Umfragen||call|/lumfragen<° an denen du noch nicht teilgenommen hast.")
 
 
 	};

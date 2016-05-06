@@ -19,7 +19,9 @@
                         if (!o[this.name].push) {
                             o[this.name] = [o[this.name]];
                         }
-                        o[this.name].push(this.value || '');
+                        if (this.value) { 
+                            o[this.name].push(this.value || '');
+                        }
                     } else {
                         o[this.name] = this.value || '';
                     }
@@ -64,6 +66,15 @@
                 <option value="1209600">2 Wochen</option>
                 <option value="2419200">1 Monat</option>
             </select></p>
+            <!--<p><select name="status">
+                <option value="Alle">Alle</option>
+                <option value="Jungs">Jungs</option>
+                <option value="Mächen">Mädchen</option>
+                <option value="Newbe">Newbe</option>
+                <option value="Stammi">Stammi</option>
+                <option value="Ehrenz">Ehrenz</option>
+                <option value="Admin">Admin</option>
+            </select>Umfrage stellen an folgende Benutzergruppe</p>-->
             <p><input type="button" id="send" value="absenden"/></p>
         </form>
             <center><button onClick="Client.executeSlashCommand('/changelogapp');">/changelogapp</button> | <button onClick="Client.sendEvent('feedbackUser', '');">/feedbackUser</button> | <button onClick="Client.executeSlashCommand('/impressum');">/impressum</button></center>
