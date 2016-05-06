@@ -5,15 +5,16 @@
 		<script>
 			Client.includeCSS('style.css');
 			Client.includeJS('/apps/api/jquery.min.js');
-			var pageData = htmlFile.getPageData();
-			var version = Client.pageData['version']; 
+			var version = Client.pageData['version'];
+			function onload { 
 			$("span#versionPanel").text(Client.pageData["version"]);
+			};
 		</script>
 	</head>
-	<body>
+	<body onload='pageLoaded()'>
 			<header><h1>Changelog Umfrage Tool</h1></header><br/>
 			<article>
-				<p>Aktuelle Version der App <span id="versionPanel" style="font-weight:bold;">...</span><hr>
+				<p>Aktuelle Version der App <span id="versionPanel" style="font-weight:bold;"></span><hr>
 				<h1>Letzte Änderungen</h1><br/>
 				Einführung der mcmBefehle HTML UI, Impressum eingeführt<br/><hr>
 				<h1>Version 1.3.2</h1><br/>
