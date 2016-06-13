@@ -14,6 +14,7 @@ var appVersion = appInfo.getAppVersion();
 var vmcm_icon = KnuddelsServer.getFullImagePath('vmcm.png'); //icon VMCM// 
 var vmcms = [];
 
+
 var aktuelleUmfrage = null;
 
 var vergangeneUmfragen = [];
@@ -117,6 +118,10 @@ if(umfrage.ende - Date.now() < 2147483647)
 				var id = RandomOperations.nextInt(0, 9999999);
 
 				var frage = data['question'].escapeKCode();
+				var frageisOk = data['question'].isOk();
+				if (!frageisOk){ 
+					return 
+				}
 				botUser.sendPublicMessage('°BB°°20°_Channelumfrage_ °r°_' + user.getProfileLink() + '_! ' + frage + ' ?');
 
 				var antworten = data['antwort'];
@@ -256,6 +261,7 @@ if(umfrage.ende - Date.now() < 2147483647)
 		if (vmcms.indexOf(user.getUserId()) != -1) {
 			user.addNicklistIcon(vmcm_icon, 35);
 		}
+
 
 
 		var offeneUmfrage = false;
