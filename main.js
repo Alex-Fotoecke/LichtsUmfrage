@@ -1,4 +1,4 @@
-﻿/* global KnuddelsServer, instance, UserStatus */
+/* global KnuddelsServer, instance, UserStatus */
 
 var botUser = KnuddelsServer.getDefaultBotUser();
 var channelname = KnuddelsServer.getChannel().getChannelName();
@@ -112,6 +112,9 @@ if(umfrage.ende - Date.now() < 2147483647)
 		if (type == 'history') {
 			history(user,"","/history");
 		}
+		if (type == 'impressum') {
+			impressum(user,"","/impressum");
+		}
 		if (type === 'frage') {
 			appContentSession.remove();
 			if (data['time'] >= 3600) {
@@ -119,7 +122,7 @@ if(umfrage.ende - Date.now() < 2147483647)
 
 				var frage = data['question'].escapeKCode();
 				var frageisOk = data['question'].isOk();
-				if (!frageisOk){ 
+				if (frageisOk){ 
 					return 
 				}
 				botUser.sendPublicMessage('°BB°°20°_Channelumfrage_ °r°_' + user.getProfileLink() + '_! ' + frage + ' ?');
@@ -310,10 +313,13 @@ if(umfrage.ende - Date.now() < 2147483647)
 		},
 		'vmcm': function(user, params, command) {
 			vmcm(user, params, command)
-		}
+		},
+		'dvmcm': function (user, params, command) {
+			dvmcm(user, params, command)
+		},
 	};
 	this.onUserLeft = function(user) {
-		user.sendPrivateMessage('Schade das du gehst ' + user.getNick() + ', beehr uns bald wieder im Channel');
+		user.sendPrivateMessage('Hey ' + user.getNick() + ', du gehst schon? Magst du uns vllt sagen wie dir diese App gefällt?')
 		botUser.sendPublicMessage(user.getProfileLink() + ' hat den Channel verlassen');
 	};
 });

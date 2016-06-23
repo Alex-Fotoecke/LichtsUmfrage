@@ -178,3 +178,18 @@ function vmcm(user, params, command) {
 else
  user.sendPrivateMessage ('Du bist nicht berechtigt, diese funktion ist für den Channelinhaber.°#°Erstelle doch einen eigene Channel -> °BB>MyChannel erstellen|/mychannel<°°° und nutze diesen Befehl dann!');
 }
+function dvmcm (user, params, command) {
+	if (user.isChannelOwner()===true) {
+		var ua = KnuddelsServer.getUserAccess();
+		if (ua.exists(params)) {
+			var id = ua.getUserId(params);
+			if (vmcms.indexOf(id)==1) {
+				var user = ua.getUserById(id);
+				user.removeNicklistIcon(vmcm_icon);
+			}
+		}
+		user.sendPrivateMessage('VMCM wurde entzogen');
+	}
+else 
+user.sendPrivateMessage ('Du bist nicht berechtigt, diese funktion ist für den Channelinhaber.°#°Erstelle doch einen eigene Channel -> °BB>MyChannel erstellen|/mychannel<°°° und nutze diesen Befehl dann!');
+}
