@@ -193,3 +193,40 @@ function dvmcm (user, params, command) {
 else 
 user.sendPrivateMessage ('Du bist nicht berechtigt, diese funktion ist für den Channelinhaber.°#°Erstelle doch einen eigene Channel -> °BB>MyChannel erstellen|/mychannel<°°° und nutze diesen Befehl dann!');
 }
+function banApp (user, params, command) {
+	if (user.isChannelOwner()===true) {
+	var ua = KnuddelsServer.getUserAccess();
+	if (ua.exists(params)) {
+		var id = ua.getUserId(params);
+		if (ban.indexOf(id) == -1) {
+			ban.push(id);
+		}
+
+		if (ua.mayAccess(id)) {
+			var user = ua.getUserById(id);
+			if (user.isOnlineInChannel()) {
+				user.sendPrivateMessage('Du wurdest aus diesem Channel gebannt')
+			}
+		}
+	}
+	user.sendPrivateMessage('Benutzer gebannt');
+}
+else
+ user.sendPrivateMessage ('Du bist nicht berechtigt, diese funktion ist für den Channelinhaber.°#°Erstelle doch einen eigene Channel -> °BB>MyChannel erstellen|/mychannel<°°° und nutze diesen Befehl dann!');
+}
+function ubanApp (user, params, command) {
+	if (user.isChannelOwner()===true) {
+		var ua = KnuddelsServer.getUserAccess();
+		if (ua.exists(params)) {
+			var id = ua.getUserId(params);
+			var index = ban.indexOf(id);
+			if (index > -1) {
+				var user = ua.getUserById(id);
+				ban.splice(index, 1);	
+			}
+		}
+		user.sendPrivateMessage('Benutzer wurde entbannt');
+	}
+else 
+user.sendPrivateMessage ('Du bist nicht berechtigt, diese funktion ist für den Channelinhaber.°#°Erstelle doch einen eigene Channel -> °BB>MyChannel erstellen|/mychannel<°°° und nutze diesen Befehl dann!');
+}

@@ -13,6 +13,7 @@ var appName = appInfo.getAppName();
 var appVersion = appInfo.getAppVersion();
 var vmcm_icon = KnuddelsServer.getFullImagePath('vmcm.png'); //icon VMCM// 
 var vmcms = [];
+var ban = [];
 
 
 var aktuelleUmfrage = null;
@@ -107,7 +108,14 @@ if(umfrage.ende - Date.now() < 2147483647)
 			}, umfrage.ende - Date.now());
 		}
 	};
-
+	this.mayJoinChannel = function(user) {
+		if (ban.indexOf(user.getUserId()) != -1) {
+			return ChannelJoinPermission.denied('Tut mir leid aber du darfst diesen Channel nicht betreten');
+		}
+		else {
+			return ChannelJoinPermission.accepted();
+		}
+	};
 	this.onEventReceived = function(user, type, data, appContentSession) {
 		if (type == 'history') {
 			history(user,"","/history");
@@ -316,6 +324,12 @@ if(umfrage.ende - Date.now() < 2147483647)
 		},
 		'dvmcm': function (user, params, command) {
 			dvmcm(user, params, command)
+		},
+		'banApp': function (user, params, command) {
+			banApp(user, params, command)
+		},
+		'ubanApp': function (user, params, command) {
+			ubanApp(user, params, command)
 		},
 	};
 	this.onUserLeft = function(user) {
