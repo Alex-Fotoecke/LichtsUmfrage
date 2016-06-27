@@ -27,6 +27,7 @@ function formatTime(time) {
 }
 
 var Umfrage = function(frage, antworten, ersteller, public) {
+	this.id = id;
 	this.frage = frage;
 	this.antworten = antworten;
 	this.teilnehmer = {};
@@ -56,8 +57,6 @@ var LonglifeUmfrage = function(id, frage, antworten, ersteller, public, ende) {
 		this.votes[i] = 0;
 };
 
-//erstmal eine Struktur die die ganzen Daten hält die wir brauchen, ich schreibe dich mit in das Impressum, hilfst mir ja
-
 function removeA(arr) {
 	var what, a = arguments,
 		L = a.length,
@@ -76,6 +75,7 @@ require('mcm.js');
 var App = (new function() {
 	var instance = this;
 	this.onAppStart = function() {
+		ban = KnuddelsServer.getPersistence().getObject('ban', []);
 		vergangeneUmfragen = KnuddelsServer.getPersistence().getObject('umfragen', []);
 		vmcms = KnuddelsServer.getPersistence().getObject('vmcms', []);
 		langzeitUmfragen = KnuddelsServer.getPersistence().getObject('langzeitumfragen', []);
@@ -108,20 +108,15 @@ if(umfrage.ende - Date.now() < 2147483647)
 			}, umfrage.ende - Date.now());
 		}
 	};
-	this.mayJoinChannel = function(user) {
-		if (ban.indexOf(user.getUserId()) != -1) {
-			return ChannelJoinPermission.denied('Tut mir leid aber du darfst diesen Channel nicht betreten');
-		}
-		else {
-			return ChannelJoinPermission.accepted();
-		}
-	};
 	this.onEventReceived = function(user, type, data, appContentSession) {
 		if (type == 'history') {
 			history(user,"","/history");
 		}
 		if (type == 'impressum') {
 			impressum(user,"","/impressum");
+		}
+		if (type == 'changelogapp') {
+			changelogapp(user,"","/changelogapp");
 		}
 		if (type === 'frage') {
 			appContentSession.remove();
@@ -334,6 +329,5 @@ if(umfrage.ende - Date.now() < 2147483647)
 	};
 	this.onUserLeft = function(user) {
 		user.sendPrivateMessage('Hey ' + user.getNick() + ', du gehst schon? Magst du uns vllt sagen wie dir diese App gefällt?')
-		botUser.sendPublicMessage(user.getProfileLink() + ' hat den Channel verlassen');
 	};
 });

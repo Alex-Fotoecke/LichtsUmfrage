@@ -151,7 +151,15 @@ function history(user, params, command) {
 			for (var j = 0; j < umfrage.antworten.length; j++) {
 				str += "'" + umfrage.antworten[j] + "' (" + umfrage.votes[j] + "), ";
 			}
-			user.sendPrivateMessage(str);
+			var pageData= {
+				history : vergangeneUmfragen = []
+			};
+			user.sendPrivateMessage('Klick kommt an')
+			var htmlFile = new HTMLFile('history.html', pageData);
+			var popupContent = AppContent.popupContent(htmlFile);
+			user.sendAppContent(popupContent);
+			//botUser.sendPostMessage(' History Umfrage Tool, aktuell ', str);//
+			//user.sendPrivateMessage(str);//
 		}
 	}
 
@@ -183,7 +191,8 @@ function dvmcm (user, params, command) {
 		var ua = KnuddelsServer.getUserAccess();
 		if (ua.exists(params)) {
 			var id = ua.getUserId(params);
-			if (vmcms.indexOf(id)==1) {
+			var index = vmcms.indexOf(id);
+			if (vmcms.indexOf(id) > -1) {
 				var user = ua.getUserById(id);
 				user.removeNicklistIcon(vmcm_icon);
 			}
@@ -194,7 +203,7 @@ else
 user.sendPrivateMessage ('Du bist nicht berechtigt, diese funktion ist für den Channelinhaber.°#°Erstelle doch einen eigene Channel -> °BB>MyChannel erstellen|/mychannel<°°° und nutze diesen Befehl dann!');
 }
 function banApp (user, params, command) {
-	if (user.isChannelOwner()===true) {
+	if (user.isChannelModerator()===true) {
 	var ua = KnuddelsServer.getUserAccess();
 	if (ua.exists(params)) {
 		var id = ua.getUserId(params);

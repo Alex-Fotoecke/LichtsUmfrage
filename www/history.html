@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<script src="/apps/api/knuddels-api.js"></script>
+		<script>
+			Client.includeCSS('style.css');
+			Client.includeJS('/apps/api/jquery.min.js');
+			var history = Client.pageData['history'];
+		</script>
+		<script>
+			function onload() { 
+			$("span#historyPanel").text(Client.pageData["history"]);
+			};
+		</script>
+	</head>
+	<body onload='onload()'>
+			<header><h1>History Umfrage Tool</h1></header><br/>
+			<article>
+				<p>History der Umfragen im Channel <span id="historyPanel" style="font-weight:bold;"></span>
+			</article>
+			<footer><h1>© Alexander Langer (LichtIstHoffnung)</h1></footer>
+	</body>
+</html>
